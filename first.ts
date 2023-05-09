@@ -27,6 +27,7 @@ aa = 'hello' as unknown as number;
 // tuple : 길이와 type이 정해진 배열
 const tuple: [string, number] = ['1', 1];
 
+/////////////////////////////////////////////
 
 const enum EDirection {
   Up,
@@ -47,3 +48,99 @@ const b1 = EDirection.Down;
 
 const obj = { a: '123', b: '345', c: 'world' };
 type Key = keyof typeof obj;
+
+//////////////////////////////////////////////
+
+type Animal = { breath: true };
+type Poyouryu = Animal & { breed: true };
+type Human = Poyouryu & { think: true };
+
+const zerocho: Human = { breath: true, breed: true, think: true };
+
+interface A {
+  breath: true
+};
+
+interface B extends A {
+  breed: true
+};
+
+const bb: B = { breath: true, breed: true };
+
+//////////////////////////////////////////////
+
+declare function forEach(arr: number[], callback: (el: number) => void): void;
+
+let target: number[] = [];
+forEach([1, 2, 3], el => { target.push(el) });
+forEach([1, 2, 3], el => target.push(el));
+
+interface D {
+  talk: () => void;
+}
+const dd: D = {
+  talk() { return 3 }
+}
+const ee = dd.talk();
+
+/////////////////////////////////////////////
+
+function numOrStr(a: number | string) {
+  if(typeof a === 'number') {
+    a.toFixed(1);
+
+  } else {
+    a.charAt(3);
+
+  }
+
+  if(typeof a === 'string') {
+    a.charAt(3);
+  }
+}
+
+numOrStr('123');
+numOrStr(1);
+
+function numOrNumArray(a: number | number[]) {
+  if(Array.isArray(a)) { // number[]
+    a.concat(4);
+
+  } else { // number
+    a.toFixed(3);
+  }
+}
+
+numOrNumArray(123);
+numOrNumArray([1, 2, 3]);
+
+class A {
+  aaa() {}
+}
+
+class B {
+  bbb() {}
+}
+
+function aOrB(param: A | B) {
+  if(param instanceof A) {
+    param.aaa();
+  }
+}
+
+aOrB(new A);
+aOrB(new B);
+
+type BB = {type: 'bb', bbb: string}
+type CC = {type: 'cc', ccc: string}
+type DD = {type: 'dd', ddd: string}
+
+function typeCheck(a: BB | CC | DD) {
+  if(a.type === 'bb') {
+    a.bbb;
+  } else if(a.type === 'cc') {
+    a.ccc;
+  } else {
+    a.ddd;
+  }
+}
