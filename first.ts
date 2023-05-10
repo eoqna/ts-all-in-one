@@ -114,31 +114,31 @@ function numOrNumArray(a: number | number[]) {
 numOrNumArray(123);
 numOrNumArray([1, 2, 3]);
 
-class A {
+class AA {
   aaa() {}
 }
 
-class B {
+class BB {
   bbb() {}
 }
 
-function aOrB(param: A | B) {
-  if(param instanceof A) {
+function aOrB(param: AA | BB) {
+  if(param instanceof AA) {
     param.aaa();
   }
 }
 
-aOrB(new A);
-aOrB(new B);
+aOrB(new AA);
+aOrB(new BB);
 
-type BB = {type: 'bb', bbb: string}
-type CC = {type: 'cc', ccc: string}
-type DD = {type: 'dd', ddd: string}
+type BBB = {type: 'b', bbb: string}
+type CCC = {type: 'c', ccc: string}
+type DDD = {type: 'd', ddd: string}
 
-function typeCheck(a: BB | CC | DD) {
-  if(a.type === 'bb') {
+function typeCheck(a: BBB | CCC | DDD) {
+  if('bbb' in a) {
     a.bbb;
-  } else if(a.type === 'cc') {
+  } else if(a.type === 'c') {
     a.ccc;
   } else {
     a.ddd;
