@@ -1,3 +1,5 @@
+// 01 TypeScript Type
+
 const a: string = '5';
 const b: number = 5;
 const c: boolean = true;
@@ -27,7 +29,7 @@ aa = 'hello' as unknown as number;
 // tuple : 길이와 type이 정해진 배열
 const tuple: [string, number] = ['1', 1];
 
-/////////////////////////////////////////////
+// 02 TypeScript enum & typeof keyof
 
 const enum EDirection {
   Up,
@@ -49,7 +51,7 @@ const b1 = EDirection.Down;
 const obj = { a: '123', b: '345', c: 'world' };
 type Key = keyof typeof obj;
 
-//////////////////////////////////////////////
+// 03 TypeScript interface & type
 
 type Animal = { breath: true };
 type Poyouryu = Animal & { breed: true };
@@ -67,7 +69,7 @@ interface B extends A {
 
 const bb: B = { breath: true, breed: true };
 
-//////////////////////////////////////////////
+// 04 TypeScript Function
 
 declare function forEach(arr: number[], callback: (el: number) => void): void;
 
@@ -83,7 +85,7 @@ const dd: D = {
 }
 const ee = dd.talk();
 
-/////////////////////////////////////////////
+// 05 TypeScript type gard
 
 function numOrStr(a: number | string) {
   if(typeof a === 'number') {
