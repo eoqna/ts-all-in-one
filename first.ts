@@ -17,6 +17,7 @@ const arr4: [number, number, string] = [1, 2, 'string'];
 // function add( x: number, y: number ): number { return x + y };
 
 // function add(x: number, y: number): number;
+
 // function add(x, y) { return x + y };
 
 let aa = 123;
