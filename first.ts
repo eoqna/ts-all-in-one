@@ -80,10 +80,12 @@ forEach([1, 2, 3], el => target.push(el));
 
 interface D {
   talk: () => void;
-}
+};
+
 const dd: D = {
   talk() { return 3 }
-}
+};
+
 const ee = dd.talk();
 
 // 05 TypeScript type gard
@@ -100,7 +102,7 @@ function numOrStr(a: number | string) {
   if(typeof a === 'string') {
     a.charAt(3);
   }
-}
+};
 
 numOrStr('123');
 numOrStr(1);
@@ -112,24 +114,24 @@ function numOrNumArray(a: number | number[]) {
   } else { // number
     a.toFixed(3);
   }
-}
+};
 
 numOrNumArray(123);
 numOrNumArray([1, 2, 3]);
 
 class AA {
   aaa() {}
-}
+};
 
 class BB {
   bbb() {}
-}
+};
 
 function aOrB(param: AA | BB) {
   if(param instanceof AA) {
     param.aaa();
   }
-}
+};
 
 aOrB(new AA);
 aOrB(new BB);
@@ -146,7 +148,7 @@ function typeCheck(a: BBB | CCC | DDD) {
   } else {
     a.ddd;
   }
-}
+};
 
 // 커스텀 타입 가드
 interface Cat { meow: number };
@@ -155,7 +157,7 @@ interface Dog { bow: number };
 function catOrDog( a: Cat | Dog ): a is Dog {
   if((a as Cat).meow) { return false }
   return true;
-}
+};
 
 function pet(a: Cat | Dog) {
   if(catOrDog(a)) {
@@ -164,4 +166,4 @@ function pet(a: Cat | Dog) {
   if('meow' in a) {
     console.log(a.meow);
   }
-}
+};
