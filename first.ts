@@ -167,3 +167,5 @@ function pet(a: Cat | Dog) {
     console.log(a.meow);
   }
 };
+
+// 타입 스크립트
