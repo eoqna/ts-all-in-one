@@ -1,5 +1,4 @@
 // 01 TypeScript Type
-
 const a: string = '5';
 const b: number = 5;
 const c: boolean = true;
@@ -168,4 +167,74 @@ function pet(a: Cat | Dog) {
   }
 };
 
-// 타입 스크립트
+// {} 와 object
+const x: {} = 'hello';
+const y: Object = 'hi'; // {}, Object : 모든 타입 (null, undefined 제외)
+// const xx: object = 'hi'; // error : 참조하는 타입이 object 타입이 아니다.
+const yy: object = {hello: 'world'}; // 실제 사용할 때는 object 지양, interface, type, class 사용
+const z: unknown = 'hi';
+
+// ts 4.8v 이상 :  unknown = {} | null | undefined
+// unknown 타입도 모든 값을 대입할 수 있다. (any 보다 권장)
+if(z) {
+  z;
+}
+
+// readOnly, 인덱스드 시그니처, 맵드 타입스
+interface AAA {
+  readonly a: string;
+  b: string;
+}
+
+const aaaa: AAA = {a: 'hello', b: 'world'};
+// aaaa.a = '123'; // error : 읽기 전용 속성이므로 값을 바꿀 수 없다.
+
+// 인덱스드 시그니처
+type BBBBB = 'Human' | 'Mammal' | 'Animal'; // Key값을 정확하게 하고 싶을 때 사용한다.
+type AAAAA = { [key in BBBBB ]: number }; // 들어가는 어떤 속성이든 간에 key의 타입도 string이고 value의 타입도 string이다.
+// type AAAAA = { [key: string]: string }; // 들어가는 어떤 속성이든 간에 key의 타입도 string이고 value의 타입도 string이다.
+// const aaaaa: AAAAA = { a: 'b', c: 'd' };
+const aaaaa: AAAAA = { 'Human': 1, 'Mammal': 2, 'Animal': 7, };
+
+// 추상에 의존하고, 구현에 의존하지 말라.
+// class 객체 내에서 private, protect, public 을 사용할 수 있다.
+class B2 implements AAA {
+  readonly a: string = '123';
+  // private readonly a: string = '123';
+  b: string = 'world';
+  c: string = 'wow';
+
+  method() {
+    console.log(this.a);
+    console.log(this.b);
+    console.log(this.c);
+  }
+}
+
+// 옵셔널, 제네릭 기본
+function abc(a: number, b?: number, c?: number) {}
+abc(1);
+abc(1, 2);
+abc(1, 2, 3);
+
+// 옵셔널 : b는 있어도 되고 없어도 된다.
+let obj2: {a: string, b?: string} = { a: 'hello', b: 'string' };
+obj2 = {a: 'hello'};
+
+// 제네릭 (return, 매개변수 모두 타입이 같은 경우 T라는(다른 알파벳 사용 가능) 타입을 지정해서 선언한다.)
+// 만들어질 때는 type이 뭔지 모르지만 실제로 사용할 때 type이 정해진다.
+
+// 'T'가 어떤 타입이든 선언할 수 있기 때문에 (true, false) 같은 것도 사용이 가능해진다.
+// 따라서, 'T'에 extends로 type을 제한해서 사용해야 한다.
+// function add<T extends number | string>(x: T, y: T): T {
+
+// 제네릭을 여러 개 만들 수 있다.
+function add<T extends number, K extends string>(x: T, y: K) {};
+
+// add(1, 2);
+// add('1', '2');
+
+// add(true, false);
+// add('1', 2);
+// add('2', 1);
+add(1, '2');
