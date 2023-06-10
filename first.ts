@@ -238,5 +238,3 @@ function add<T extends number, K extends string>(x: T, y: K) {};
 // add('1', 2);
 // add('2', 1);
 add(1, '2');
-
-// git Commit Test
