@@ -239,4 +239,4 @@ function add<T extends number, K extends string>(x: T, y: K) {};
 // add('2', 1);
 add(1, '2');
 
-// TypeScript
+// 아 TS 공부해야되는데 졸라리어렵다~
