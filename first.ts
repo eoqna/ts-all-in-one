@@ -238,3 +238,10 @@ function add<T extends number, K extends string>(x: T, y: K) {};
 // add('1', 2);
 // add('2', 1);
 add(1, '2');
+
+//잉 왜 커밋이 안되지
+// 이상하네
+
+type TestType = {
+  index: number;
+}
