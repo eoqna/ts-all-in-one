@@ -239,9 +239,70 @@ function add<T extends number, K extends string>(x: T, y: K) {};
 // add('2', 1);
 add(1, '2');
 
-//잉 왜 커밋이 안되지
-// 이상하네
+// forEach 직접 만들기
+interface Arr<T> {
+  forEach(callback: (item: T, index: number) => void): void;
+  map<S>(callback: (v: T, i: number) => S): S[];
+  filter<S extends T>(callback: (v: T) => v is S): S[];
+};
 
-type TestType = {
-  index: number;
+const forA: Arr<number> = [1, 2, 3];
+
+forA.forEach((item, index) => {
+  console.log(item, index);
+  item.toFixed(1);
+});
+forA.forEach((item) => {
+  console.log(item);
+  return "3";
+});
+
+const forB: Arr<string> = ["1", "2", "3"];
+
+forB.forEach((item) => {
+  console.log(item);
+  item.charAt(3);
+});
+forB.forEach((item) => {
+  console.log(item);
+  return "3";
+});
+
+// map 직접 만들기
+const mapA: Arr<number> = [1, 2, 3];
+const resultMapA = mapA.map((v, i) => v + 1); // [2, 3, 4]
+const resultMapB = mapA.map((v) => v.toString()); // ["1", "2", "3"]
+const resultMapC = mapA.map((v) => v % 2 === 0); // [false, true, false];
+
+const mapB: Arr<string> = ["1", "2", "3"];
+const resultMapD = mapB.map((v) => +v);
+
+// filter 직접 만들기
+const filterA: Arr<number> = [1, 2, 3];
+const resultFilterA = filterA.filter((v): v is number => v % 2 === 0); // [2] number[]
+
+const filterB: Arr<number | string> = [1, "2", 3, "4", 5];
+const resultFilterB = filterB.filter((v): v is string => typeof v === "string"); // ["2", "4"] string[]
+
+const predicate = (v: string | number): v is number => typeof v === "number";
+const resultFilterC = filterB.filter(predicate); // [1, 3, 5] string[]
+
+// 공변성, 반공변성
+// 함수간에 서로 대입할수 있냐 없냐를 구분하는 것
+
+// 매개변수는 좁은 타입으로만 대입되지만 return은 넓은타입으로만 대입된다.
+function convert(x: string | number): number {
+  return +x;
 }
+
+convert("1");
+
+type convertA = (x: string) => number;
+let convertB: convertA = convert;
+
+// function convert(x: string): number | string {
+//   return +x;
+// }
+
+// type convertA = (x: string) => number;
+// const convertB: convertA = a;
