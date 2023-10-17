@@ -306,3 +306,82 @@ let convertB: convertA = convert;
 
 // type convertA = (x: string) => number;
 // const convertB: convertA = a;
+
+interface Axios {
+  get(): void;
+}
+
+// interface는 javaScript에서 못쓴다.
+// 따라서, javaScript에서도 쓸 수 있고 interface와 비슷한 역할을 해주는 class를 사용하면 된다.
+class CustomError extends Error {
+  response?: {
+    data: any;
+  }
+}
+declare const axios: Axios;
+
+(async () => {
+  try {
+    await axios.get();
+  } catch (err: unknown) {
+    // typeScript는 건망증이 심하니까 변수로 만들어서 type을 지정해주는 것이 좋다.
+    // 직접 custom한 type은 1회성이다.
+    // as도 any만큼 안좋은 것. 따라서, unknown 타입인 경우가 아닌 이상 as를 쓰지않는다.
+    // type가드로 type을 좁혀놨으면 unknown 이더라도 as를 안써도 된다.
+    if( err instanceof CustomError ) {
+      console.error(err.response?.data);
+      err.response?.data;
+    }
+  }
+});
+
+// Partial : interface의 객체를 모두 optional로 민들어 준다.
+// 하지만, 모든 객체가 optional이 되므로 값을 안넣어도 에러가 나지 않는다.
+// 그래서 보통 Pick이나 Omit을 사용한다.
+interface Profile {
+  name: string,
+  age: number,
+  married: boolean,
+};
+
+type P<T> = {
+  [Key in keyof T]?: T[Key];
+}
+
+const dbshin: Profile = {
+  name: "dbshin",
+  age: 31,
+  married: false,
+};
+
+// const newDbshin: Partial<Profile> = {
+//   name: "dbshin",
+//   age: 31,
+// };
+
+const newDbshin: P<Profile> = {
+  name: "dbshin",
+  age: 31,
+};
+
+// 제네릭을 여러 개 쓰면 제네릭 끼리 제한 조건을 먼저 붙여줘야 한다.
+type Pi<T, S extends keyof T> = {
+  [Key in S]: T[Key];
+}
+
+// Pick : 선택한 변수만 값을 넣어줄 수 있다.
+// const pickDbshin: Pick<Profile, "name" | "age"> = {
+//   name: "dbshin",
+//   age: 31,
+// };
+
+const pickDbshin: Pi<Profile, "name" | "age"> = {
+  name: "dbshin",
+  age: 31,
+};
+
+// Omit : 선택한 변수 값을 제외한 변수만 넣어줄 수 있다.
+const omitDbshin: Omit<Profile, "married"> = {
+  name: "dbshin",
+  age: 31,
+};
