@@ -380,8 +380,144 @@ const pickDbshin: Pi<Profile, "name" | "age"> = {
   age: 31,
 };
 
-// Omit : 선택한 변수 값을 제외한 변수만 넣어줄 수 있다.
-const omitDbshin: Omit<Profile, "married"> = {
+
+// Exclude와 Extract 차이 : Exlclude는 입력한 key만 제외, Extract는 입력한 key만 추출
+// type Exclude<T, U> = T extends U ? never : T;
+// type Extract<T, U> = T extends U ? T : never;
+type AAnimal = "Cat" | "Dog" | "Human";
+type MMammal = Exclude<AAnimal, "Human">;
+type HHuman = Extract<AAnimal, "Human">;
+
+type ExcludeType = Exclude<keyof Profile, "married">;
+
+// keyof를 붙이고 안붙이고의 차이
+// keyof를 붙여서 키 값을 추출해 아래의 구조처럼 만들기 위함
+// "key" | "key" | "key"
+const newPickDbshin: Pick<Profile, Exclude<keyof Profile, "married">> = {
   name: "dbshin",
   age: 31,
 };
+
+// S에 extends keyof를 붙이면 다른 객체의 key값들만 올 수 있다고 조건을 줄 수 있다.
+// S => string | number | symbol
+type O<T, S extends keyof any> = Pick<T, Exclude<keyof T, S>>;
+
+// Omit : 선택한 변수 값을 제외한 변수만 넣어줄 수 있다.
+// Exclude<T, U> : T에서 U타입을 제외한다.
+// const omitDbshin: Omit<Profile, "married"> = {
+//   name: "dbshin",
+//   age: 31,
+// };
+
+const omitDbshin: O<Profile, "married"> = {
+  name: "dbshin",
+  age: 31,
+};
+
+// Required, Record, NonNullable Type
+interface Profile2 {
+  name?: string,
+  age?: number,
+  married?: boolean,
+};
+
+// Required : 모든 속성을 필수로 만들고 싶을 때 사용한다.
+// -? : modifier : 옵셔널을 다 빼버린다.
+// +? === ?(Optional)
+// const requiredDbshin: Required<Profile> = {
+//   name: "dbshin",
+//   age: 30,
+//   married: false,
+// };
+
+type R<T> = {
+  [Key in keyof T]-?: T[Key];
+}
+
+const requiredDbshin: R<Profile> = {
+  name: "dbshin",
+  age: 30,
+  married: false,
+};
+
+// ReadOnly : 객체를 수정할 수 없게 만든다.
+// const readOnlyDbshin: Readonly<Profile> = {
+//   name: "dbshin",
+//   age: 30,
+//   married: false,
+// };
+
+// Key를 가져올 때 readonly 속성을 붙여서 수정이 불가능하게 만든다.
+// -readonly를 붙이면 readonly를 제거할 수 있다.
+type RO<T> = {
+  // -readonly [Key in keyof T]: T[Key];
+  // -readonly [Key in keyof T]-?: T[Key];
+  readonly [Key in keyof T]: T[Key];
+};
+
+const readOnlyDbshin: RO<Profile> = {
+  name: "dbshin",
+  age: 30,
+  married: false,
+};
+
+// error : Readonly에 의해 수정이 불가능하므로 에러가 발생한다.
+// readOnlyDbshin.age = 29;
+
+//Record
+interface Obj {
+  [key: string]: number;
+};
+
+// key값만 필요하기 때문에 제한조건 (keyof any)를 준다.
+type RC<T extends keyof any, S> = {
+  [Key in T]: S;
+};
+
+const ObjA: Obj = { a: 3, b: 5,};
+
+const ObjB: Record<string, number> = { a: 3, b: 5 };
+
+const ObjC: RC<string, number> = { a: 3, b: 5 };
+
+// NonNullable
+// 새로운 타입을 생성하고 싶은데 null과 undefined를 빼고 가져오고 싶을 때 사용한다.
+// key에 적용된다.
+// 제외하고 싶으면 never, 제외하기 싫으면 type
+type NN<T> = T extends null | undefined ? never : T; 
+
+type RCA = string | null | undefined | boolean | number;
+type RCB = NonNullable<RCA>;
+type RCC = NN<RCA>;
+
+
+// infer (Parameters, ReturnType, ConstructorParameters, InstanceType)
+// Parameters : type을 가져와서 배열로 타입을 저장한다.
+// 저장한 type을 index로 접근할 수 있다.
+// infer : TypeScript가 알아서 추론한 것. (inference) => typescript가 매개변수의 type을 추론한다.
+//         extends에서만 사용 가능하다.
+//         추론조건 ? 추론 성공 시 : 추론 실패 시
+function zip(x: number, y: string, z: boolean): { x: number, y: string, z: boolean} {
+  return { x, y, z};
+};
+
+// Type을 함수로 제한하는 방법 (...args: any) => any
+type PR<T extends (...args: any) => any> = T extends (...args: infer A) => any ? A : never;
+
+// Return Type 추론
+type RT<T extends (...args: any) => any> = T extends (...args: any) => infer A ? A : never;
+
+// ConstructorParameters
+// type ConstructorParameters<T extends (...args: any) => any> = T extends (...args: infer A) => any ? A : never
+type CP<T extends (...args: any) => any> = T extends (...args: infer A) => any ? A : never;
+
+
+// InstanceType
+// type InstanceType<T extends (...args: any) => any> = T extends (...args: any) => infer A ? A : never
+type IT<T extends (...args: any) => any> = T extends (...args: any) => infer A ? A : never;
+
+// type Params = Parameters<typeof zip>;
+type Params = PR<typeof zip>;
+type First = Params[2];
+// type Ret = ReturnType<typeof zip>;
+type Ret = RT<typeof zip>;
